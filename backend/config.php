@@ -14,9 +14,9 @@ $__host = strtolower($_SERVER['HTTP_HOST'] ?? 'localhost');
 $__isLocal = (bool)preg_match('/^(localhost|127\.0\.0\.1|\[::1\]|192\.168\.[0-9.]+)(:\d+)?$/', $__host);
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', $__isLocal ? 'bier'  : 'yourcpanel_bier');       // <- cPanel ላይ ይቀይሩ
-define('DB_USER', $__isLocal ? 'root'  : 'yourcpanel_bieruser');   // <- cPanel ላይ ይቀይሩ
-define('DB_PASS', $__isLocal ? ''      : 'your_db_password');      // <- cPanel ላይ ይቀይሩ
+define('DB_NAME', $__isLocal ? 'bier'  : 'biercrxg_bier');
+define('DB_USER', $__isLocal ? 'root'  : 'biercrxg_biercrxg');
+define('DB_PASS', $__isLocal ? ''      : 'your_db_password'); // <- cPanel ላይ ለተጠቃሚው የሰጡትን የይለፍ ቃል እዚህ ይተኩ
 define('DB_CHARSET', 'utf8mb4');
 
 // --- Security ---
