@@ -1,7 +1,13 @@
 <?php
 // የግንኙነት ፍተሻ: ሠንጠረዦች መኖራቸውን ያሳያል (ምንም ሚስጥር አያሳይም)። ?repair=1 የጎደሉትን ይፈጥራል።
 require_once __DIR__ . '/../db.php';
-$need = ['users','orders','order_notes','testimonials','chat_sessions','chat_messages','tasks','finance_transactions','finance_debts','page_views','site_settings','customers','customer_interactions','customer_activities'];
+$need = [
+  'users', 'site_settings', 'orders', 'order_notes', 'testimonials',
+  'chat_sessions', 'chat_messages', 'tasks', 'finance_transactions', 'finance_debts',
+  'page_views', 'customers', 'customer_interactions', 'customer_activities',
+  'user_notes', 'team_messages', 'work_log', 'push_config', 'notif_events',
+  'push_subscriptions', 'login_attempts'
+];
 $out = ['ok' => true, 'tables' => [], 'missing' => []];
 try {
   $pdo = db();

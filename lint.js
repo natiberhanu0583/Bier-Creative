@@ -200,7 +200,7 @@ for (const relPath of cssFiles) {
 }
 
 // 4. JSON Files
-console.log('\n\x1b[1m[4/4] Checking Manifest & JSON Files...\x1b[0m');
+console.log('\n\x1b[1m[4/5] Checking Manifest & JSON Files...\x1b[0m');
 const jsonFiles = ['package.json', 'admin/manifest.webmanifest'];
 
 for (const relPath of jsonFiles) {
@@ -215,6 +215,30 @@ for (const relPath of jsonFiles) {
   } catch (err) {
     logFail(`${relPath}: ${err.message}`);
   }
+}
+
+// 5. Database SQL Schema
+console.log('\n\x1b[1m[5/5] Checking SQL Database Schema...\x1b[0m');
+const schemaPath = path.resolve(__dirname, 'backend/schema.sql');
+if (fs.existsSync(schemaPath)) {
+  const sql = fs.readFileSync(schemaPath, 'utf8');
+  const tableMatches = [...sql.matchAll(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?`?([a-zA-Z0-9_]+)`?/gi)];
+  const tableNames = tableMatches.map(m => m[1]);
+  
+  // Check parentheses balance in SQL statements
+  let openParen = 0;
+  for (let i = 0; i < sql.length; i++) {
+    if (sql[i] === '(') openParen++;
+    else if (sql[i] === ')') openParen--;
+  }
+  
+  if (openParen !== 0) {
+    logFail(`backend/schema.sql: Unbalanced parentheses (delta: ${openParen})`);
+  } else {
+    logPass(`backend/schema.sql: ${tableNames.length} tables verified with balanced syntax`);
+  }
+} else {
+  logWarn('backend/schema.sql not found');
 }
 
 // Summary
