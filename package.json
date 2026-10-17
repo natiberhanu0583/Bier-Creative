@@ -1,0 +1,21 @@
+{
+  "name": "bier-creative",
+  "version": "1.0.0",
+  "description": "Bier Creative — Digital Agency Website and Admin Portal",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "lint": "node lint.js",
+    "test": "node lint.js"
+  },
+  "keywords": [
+    "bier-creative",
+    "ethiopia",
+    "agency",
+    "portfolio",
+    "admin"
+  ],
+  "author": "Bier Creative",
+  "license": "ISC"
+}

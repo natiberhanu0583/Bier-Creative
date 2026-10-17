@@ -1,0 +1,12 @@
+# Protect sensitive files from being downloaded directly
+<FilesMatch "\.(sql|md|log|txt|bak|ini)$">
+  Require all denied
+</FilesMatch>
+
+Options -Indexes
+
+# internal PHP libraries/config must never be opened directly (only backend/api/*.php are public endpoints)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(config|db|ai_knowledge|crm_lib|push)\.php$ - [F,L]
+</IfModule>

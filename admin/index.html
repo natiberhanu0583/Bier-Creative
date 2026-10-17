@@ -1,0 +1,203 @@
+<!-- BIER_BUILD:20261016f -->
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Bier Creative — አድሚን</title>
+<link rel="icon" type="image/png" href="bier_1.png" />
+<link rel="shortcut icon" type="image/png" href="bier_1.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#0e1614" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Bier Admin" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script>document.write('<link rel="stylesheet" href="admin.css?v='+Date.now()+'" />');</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <button type="button" class="admin-lang lang-toggle login-lang">EN</button>
+    <img src="bier_1.png" alt="Bier Creative" onerror="this.style.display='none'" />
+    <h1>ብዕር ክርኤቲቭ</h1>
+    <div class="login-divider"><span></span><i class="fas fa-gem"></i><span></span></div>
+    <p class="sub">ADMIN PORTAL</p>
+
+    <div class="login-role-tabs" id="loginRoleTabs">
+      <button type="button" class="login-role-tab active" data-role-group="owner">ባለቤት</button>
+      <button type="button" class="login-role-tab" data-role-group="manager">ማናጀር</button>
+      <button type="button" class="login-role-tab" data-role-group="staff">ስታፍ</button>
+    </div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="loginUser" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPass" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-right-to-bracket"></i>&nbsp; ግባ</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+      <div class="login-forgot"><i class="fas fa-circle-info"></i>የይለፍ ቃል ከረሱ <b>ባለቤቱን ያናግሩ</b> — አዲስ የይለፍ ቃል ያዘጋጅልዎታል።</div>
+  </div>
+</div>
+
+<!-- ===== APP SHELL ===== -->
+<div class="app" id="app">
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="bier_1.png" alt="" onerror="this.style.display='none'" />
+      <span>ብዕር አድሚን</span>
+    </div>
+    <nav id="navItems">
+      <!-- injected by JS based on role -->
+    </nav>
+    <div class="sidebar-footer">
+      <div class="build-tag" title="የፋይል ስሪት">ስሪት 20261016f</div>
+      <div class="user-chip" id="userChip" title="የኔ መለያ" style="cursor:pointer;">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div>
+          <div id="userName">—</div>
+          <div class="role-tag" id="userRole">—</div>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm" id="myAccountBtn" style="width:100%;margin-top:10px;">
+        <i class="fas fa-user-gear"></i>&nbsp; የኔ መለያ
+      </button>
+      <button class="btn btn-outline btn-sm" id="logoutBtn" style="width:100%;margin-top:8px;">
+        <i class="fas fa-right-from-bracket"></i>&nbsp; ውጣ
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+      <div class="topbar-search" id="topbarSearchWrap">
+        <i class="fas fa-search" id="topbarSearchIcon"></i>
+        <input type="text" id="topSearch" placeholder="ኦርደር፣ ደንበኛ ወይም ስታፍ ይፈልጉ..." />
+      </div>
+      <button class="admin-lang lang-toggle top-lang" type="button">EN</button>
+      <button class="topbar-icon-btn" id="notifBtn" title="ማሳወቂያዎች">
+        <i class="fas fa-bell"></i>
+        <span class="dot" id="notifDot" style="display:none;">0</span>
+      </button>
+      <div class="topbar-avatar" id="topAvatar">?</div>
+    </div>
+    <div class="notif-panel" id="notifPanel"></div>
+    <div id="view"><!-- injected per-tab --></div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== Order detail modal ===== -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('orderModal')">&times;</button>
+    <div id="orderModalBody"></div>
+  </div>
+</div>
+
+<!-- ===== Task modal ===== -->
+<div class="modal-overlay" id="taskModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('taskModal')">&times;</button>
+    <h3 id="taskModalTitle">አዲስ ስራ (Task)</h3>
+    <div class="field"><label>ርዕስ / Title</label><input type="text" id="taskTitle" /></div>
+    <div class="field"><label>ዝርዝር / Description</label><textarea id="taskDesc" rows="3"></textarea></div>
+    <div class="field"><label>ለ ስታፍ / Assign to</label><select id="taskAssignee"></select></div>
+    <div class="field"><label>የመጨረሻ ቀን / Due date</label><input type="date" id="taskDue" /></div>
+    <button class="btn btn-primary" style="width:100%" id="taskSaveBtn">አስቀምጥ / Save</button>
+  </div>
+</div>
+
+<!-- ===== Staff account modal ===== -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('staffModal')">&times;</button>
+    <h3 id="staffModalTitle">አዲስ ስታፍ</h3>
+    <div class="field"><label>ሙሉ ስም / Full name</label><input type="text" id="staffName" /></div>
+    <div class="field"><label>Username</label><input type="text" id="staffUsername" /></div>
+    <div class="field"><label>ስልክ / Phone</label><input type="text" id="staffPhone" /></div>
+    <div class="field"><label>Role</label>
+      <select id="staffRole">
+        <option value="content_creator">ኮንተንት ክሬተር (Content Creator)</option>
+        <option value="editor">ኢዲተር (Editor)</option>
+        <option value="coder">ኮደር (Coder)</option>
+        <option value="host">ሆስት (Host)</option>
+        <option value="manager">ማናጀር (Manager)</option>
+        <option value="owner">ባለቤት (Owner)</option>
+      </select>
+    </div>
+    <div class="field"><label>Password <span class="muted" id="staffPwHint"></span></label><input type="password" id="staffPassword" /></div>
+    <button class="btn btn-primary" style="width:100%" id="staffSaveBtn">አስቀምጥ / Save</button>
+  </div>
+</div>
+
+<!-- ===== My account / profile modal (any logged-in staff) ===== -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('profileModal')">&times;</button>
+    <h3>የኔ መለያ / My Account</h3>
+    <div class="field"><label>ሙሉ ስም / Full name</label><input type="text" id="pfName" /></div>
+    <div class="field"><label>Username</label><input type="text" id="pfUsername" /></div>
+    <div class="field"><label>ስልክ / Phone</label><input type="text" id="pfPhone" /></div>
+    <hr style="border-color:rgba(255,255,255,0.08);margin:14px 0;" />
+    <div class="field"><label>አዲስ የይለፍ ቃል / New password <span class="muted">(ካልቀየሩ ባዶ ይተውት)</span></label><input type="password" id="pfNewPassword" placeholder="••••••" /></div>
+    <div class="field" id="pfCurrentPwField"><label>የአሁኑ የይለፍ ቃል / Current password <span class="muted">(username ወይም password ሲቀይሩ ያስፈልጋል)</span></label><input type="password" id="pfCurrentPassword" placeholder="••••••" /></div>
+    <div class="muted" id="pfError" style="color:var(--orange-light);font-size:0.8rem;margin-bottom:8px;"></div>
+    <button class="btn btn-primary" style="width:100%" id="pfSaveBtn">አስቀምጥ / Save</button>
+  </div>
+</div>
+
+<script>
+  // ሁልጊዜ አዲሱን ፋይል እንዲጭን (ብራውዘር አሮጌውን እንዳያስቀምጥ)
+  var __v = Date.now();
+  document.write('<script src="config.js?v=' + __v + '"><\/script>');
+  document.write('<script src="i18n-en.js?v=' + __v + '"><\/script>');
+  document.write('<script src="i18n.js?v=' + __v + '"><\/script>');
+  document.write('<script src="admin.js?v=' + __v + '"><\/script>');
+</script>
+
+<!-- Install-as-app chip -->
+<div id="pwaChip" style="display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:99999;max-width:440px;margin:0 auto;background:#16231f;border:1px solid #c9a24a;border-radius:14px;padding:12px 14px;color:#f3efe6;font:14px/1.4 sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5);align-items:center;gap:10px;">
+  <img src="icon-192.png" alt="" width="38" height="38" style="border-radius:9px;flex:none" />
+  <div style="flex:1;min-width:0"><b>አድሚኑን እንደ አፕ ይጫኑ</b><div id="pwaMsg" style="opacity:.75;font-size:12.5px">በስልክ ሆም ስክሪን ላይ በቀላሉ ለመክፈት</div></div>
+  <button id="pwaGo" style="background:#c9a24a;color:#111;border:0;border-radius:9px;padding:8px 14px;font-weight:700;cursor:pointer">ጫን</button>
+  <button id="pwaX" aria-label="close" style="background:none;border:0;color:#fff;font-size:20px;opacity:.6;cursor:pointer">&times;</button>
+</div>
+<script>
+(function(){
+  var chip=document.getElementById('pwaChip'),dp=null,KEY='bierPwaDismiss';
+  function standalone(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;}
+  function dismissed(){try{return Date.now()-Number(localStorage.getItem(KEY)||0)<7*864e5;}catch(e){return false;}}
+  function show(){if(!standalone()&&!dismissed())chip.style.display='flex';}
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;show();});
+  window.addEventListener('appinstalled',function(){chip.style.display='none';});
+  document.getElementById('pwaX').onclick=function(){chip.style.display='none';try{localStorage.setItem(KEY,Date.now());}catch(e){}};
+  document.getElementById('pwaGo').onclick=function(){
+    if(dp){dp.prompt();dp.userChoice.finally(function(){dp=null;chip.style.display='none';});}
+    else{document.getElementById('pwaMsg').textContent='ብራውዘር ሜኑ ውስጥ "Add to Home Screen" / "ወደ መነሻ ስክሪን ጨምር" ይጫኑ';document.getElementById('pwaGo').style.display='none';}
+  };
+  var ua=navigator.userAgent;
+  if(/iphone|ipad|ipod/i.test(ua)&&!standalone()){
+    document.getElementById('pwaMsg').textContent='Safari ውስጥ Share (⬆️) ← "Add to Home Screen" ይጫኑ';
+    document.getElementById('pwaGo').style.display='none'; setTimeout(show,2500);
+  }
+})();
+</script>
+</body>
+</html>

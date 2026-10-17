@@ -1,0 +1,4 @@
+# API endpoints return JSON only; never cache responses
+<IfModule mod_headers.c>
+  Header always set Cache-Control "no-store"
+</IfModule>
